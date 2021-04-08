@@ -1,4 +1,13 @@
-# commits
+# Commits List
+This is a way to see the commits list of this project with VueJs,Bootstrap and GitHubAPI
+
+## Installation
+
+Clone this project with any terminal you like with:
+
+```bash
+git clone https://github.com/DavidSilvaG/commits-list.git
+```
 
 ## Project setup
 ```
@@ -15,5 +24,5 @@ npm run serve
 npm run build
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Notes
+Feel free to modify and use this code.
