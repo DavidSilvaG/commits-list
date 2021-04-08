@@ -4,8 +4,12 @@
             <div class="col-12 col-md-6 text-center commit-box flex">
                 <div>
                     <h3>Commits History</h3>
+                    <div v-if="loading" class="spinner-border text-success" role="status">
+                        <span class="visually-hidden"></span>
+                    </div>
+                    <button @click="refresh()" class="btn btn-warning" v-else>Refresh</button>
                     <ul class="timeline">
-                        <li v-for="event in commits" :key="event.sha">
+                        <li v-for="event in commits" :key="event.sha" class="commit">
                             <a :href="'https://github.com/DavidSilvaG/commits-list/commit/'+event.sha" target="_blank" data-bs-toggle="tooltip" title="See changes on GitHub">
                                 <h5 class="text-info">{{event.commit.message}}</h5>
                             </a>
@@ -52,20 +56,37 @@ export default {
   name: 'App',
   data(){
     return {
+      loading: true,
       commits:[]
     }
   },
   methods:{
-    formatDate(date){
-            const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-            let toFormat = new Date(date)
-            return `${months[toFormat.getMonth()]} ${toFormat.getDate()} - ${toFormat.getHours()}:${String(toFormat.getMinutes()+100).substring(1,3)}`
-    },
+      formatDate(date){
+          const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+          let toFormat = new Date(date)
+          return `${months[toFormat.getMonth()]} ${toFormat.getDate()} - ${toFormat.getHours()}:${String(toFormat.getMinutes()+100).substring(1,3)}`
+      },
+      refresh(){
+        this.loading = true
+        this.commits = []
+        var that = this
+        setTimeout(() => {
+          that.getCommits()
+        }, 500);
+      },
+      async getCommits(){
+          try {
+              let data = await fetch('https://api.github.com/repos/davidsilvag/commits-list/commits')
+              let unorderedCommits = await data.json()
+              this.commits = unorderedCommits.sort((a,b)=> new Date(a.commit.author.date)-new Date(b.commit.author.date))
+          } catch (error) {
+              console.log(error)
+          }
+          this.loading = false
+      },
   },
-  async created(){
-    let data = await fetch('https://api.github.com/repos/davidsilvag/commits-list/commits')
-    let unorderedCommits = await data.json()
-    this.commits = unorderedCommits.sort((a,b)=> new Date(a.commit.author.date)-new Date(b.commit.author.date))
+  created(){
+      this.getCommits()
   }
   
 }
@@ -99,6 +120,18 @@ body{
     align-items: center;
     justify-content: center;
 }
+
+.commit{
+  animation: expand .5s ease-in-out;
+}
+
+@keyframes expand {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+}
+
 
 /* Thanks to https://bootsnipp.com/mylastof*/ 
 ul.timeline {
