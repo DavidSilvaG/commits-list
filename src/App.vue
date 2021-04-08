@@ -5,8 +5,8 @@
                 <div>
                     <h3>Commits History</h3>
                     <ul class="timeline">
-                        <li v-for="event in commits">
-                            <a :href="'https://github.com/DavidSilvaG/davidsilvag.github.io/commit/'+event.sha" target="_blank" data-bs-toggle="tooltip" title="See changes on GitHub">
+                        <li v-for="event in commits" :key="event.sha">
+                            <a :href="'https://github.com/DavidSilvaG/commits-list/commit/'+event.sha" target="_blank" data-bs-toggle="tooltip" title="See changes on GitHub">
                                 <h5 class="text-info">{{event.commit.message}}</h5>
                             </a>
                             <p>{{formatDate(event.commit.author.date)}} </p>
@@ -16,7 +16,30 @@
             </div>
             <div class="col-12 col-md-6 text-center bg-dark text-white flex">
                 <div>
-                    Web Details
+                    <h4>Made with 
+                        <a href="https://vuejs.org/" target="_blank">
+                            Vuejs
+                        </a>, 
+                        <a href="https://getbootstrap.com/" target="_blank">
+                            Bootstrap
+                        </a> and 
+                        <a href="https://docs.github.com/en/rest" target="_blank">
+                            GitHubApi
+                        </a></h4>    
+                        
+                    <div class="mt-5">
+                        <h5>To see commits with GitHubApi make a GET request to:</h5>
+                        <h6>
+                            https://api.github.com/repos/ {username} / {repoName} /commits/ {sha}
+                        </h6>
+                        <small>*sha optional to see specific commit</small>
+                    </div>
+                    <div class="mt-5">
+                        Code available on
+                        <a class="text-info" href="https://github.com/DavidSilvaG/commits-list" target="_blank">
+                            github.com/DavidSilvaG/commits-list
+                        </a> 
+                    </div>
                 </div>
             </div>
         </div>
